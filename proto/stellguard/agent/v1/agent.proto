@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package stellguard.agent.v1;
+
+option go_package = "github.com/stellhub/stellguard-go-sdk/proto/stellguard/agent/v1;agentv1";
+
+service StellGuardAgent {
+  rpc FetchWorkloadCertificate(FetchWorkloadCertificateRequest) returns (CredentialBundle);
+  rpc WatchCredentialBundle(WatchCredentialBundleRequest) returns (stream CredentialBundle);
+  rpc FetchTrustBundle(FetchTrustBundleRequest) returns (TrustBundle);
+}
+
+message FetchWorkloadCertificateRequest {
+  string spiffe_id = 1;
+  repeated string dns_names = 2;
+  int64 ttl_seconds = 3;
+  bool force_rotate = 4;
+}
+
+message WatchCredentialBundleRequest {
+  string spiffe_id = 1;
+  repeated string dns_names = 2;
+  int64 ttl_seconds = 3;
+  int64 renewal_hint_seconds = 4;
+}
+
+message CredentialBundle {
+  string certificate_pem = 1;
+  string private_key_pem = 2;
+  string trust_bundle_pem = 3;
+  string issuer = 4;
+  string key_id = 5;
+  string serial_number = 6;
+  int64 expires_at_unix_seconds = 7;
+}
+
+message FetchTrustBundleRequest {
+  string trust_domain = 1;
+}
+
+message TrustBundle {
+  string trust_domain = 1;
+  string trust_bundle_pem = 2;
+  string key_id = 3;
+}
