@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package stellguard.agent.v1;
+
+option go_package = "github.com/stellhub/stellguard-go-sdk/proto/stellguard/agent/v1;agentv1";
+
+service WorkloadCredentialService {
+  rpc FetchWorkloadCredential(FetchWorkloadCredentialRequest) returns (WorkloadCredential);
+  rpc WatchWorkloadCredential(WatchWorkloadCredentialRequest) returns (stream WorkloadCredential);
+  rpc GetTrustBundle(GetTrustBundleRequest) returns (TrustBundle);
+  rpc GetAgentStatus(GetAgentStatusRequest) returns (AgentStatus);
+}
+
+message FetchWorkloadCredentialRequest {
+  string audience = 1;
+  optional bool include_private_key = 2;
+}
+
+message WatchWorkloadCredentialRequest {
+  optional bool send_current = 1;
+  string audience = 2;
+  optional bool include_private_key = 3;
+}
+
+message GetTrustBundleRequest {
+  string trust_domain = 1;
+}
+
+message GetAgentStatusRequest {}
+
+message WorkloadCredential {
+  string slot = 1;
+  string certificate_pem = 2;
+  string private_key_pem = 3;
+  string certificate_chain_pem = 4;
+  string trust_bundle_pem = 5;
+  string trust_domain = 6;
+  string agent_id = 7;
+  string node_id = 8;
+  string identity_id = 9;
+  string session_id = 10;
+  string lease_id = 11;
+  string renewal_group_id = 12;
+  string spiffe_id = 13;
+  repeated string dns_names = 14;
+  string serial_number = 15;
+  string key_version_id = 16;
+  string key_version_label = 17;
+  string bundle_id = 18;
+  int64 bundle_version = 19;
+  string certificate_sha256 = 20;
+  string not_before = 21;
+  string not_after = 22;
+  string renew_after = 23;
+  string updated_at = 24;
+}
+
+message TrustBundle {
+  string trust_domain = 1;
+  string bundle_id = 2;
+  int64 bundle_version = 3;
+  string key_version_id = 4;
+  string bundle_pem = 5;
+  string updated_at = 6;
+}
+
+message AgentStatus {
+  string state = 1;
+  string message = 2;
+  string agent_id = 3;
+  string trust_domain = 4;
+  string session_id = 5;
+  string node_id = 6;
+  string last_renewal_at = 7;
+  string last_error = 8;
+  string uds_path = 9;
+  string started_at = 10;
+  int64 bundle_version = 11;
+  string key_version_id = 12;
+}
